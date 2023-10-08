@@ -22,9 +22,9 @@ ver := 6.6.3
 client := $(wildcard client/*.json client/*.ts)
 server := $(wildcard server/*.go)
 
-build = @cd server && GOOS=$(1) GOARCH=$(3) go build -o ../dist/$(2)-$(3)/$(4)
-pandoc = @test -d dist/$(1)-$(2) || mkdir -p dist/$(1)-$(2) && pandoc -f markdown -o dist/$(1)-$(2)/$(3) --resource-path docs:docs/platforms $(4) docs/webapp.md docs/faq.md CHANGELOG.md
-zip = @cd dist/$(1)-$(2) && zip -q ../$(app)-$(1)-$(2)-v$(ver).zip * && cd ..
+build = cd server && GOOS=$(1) GOARCH=$(3) go build -o ../dist/$(2)-$(3)/$(4)
+pandoc = test -d dist/$(1)-$(2) || mkdir -p dist/$(1)-$(2) && pandoc -f markdown -o dist/$(1)-$(2)/$(3) --resource-path docs:docs/platforms $(4) docs/webapp.md docs/faq.md CHANGELOG.md
+zip = cd dist/$(1)-$(2) && zip -q ../$(app)-$(1)-$(2)-v$(ver).zip * && cd ..
 
 .PHONY: all clean container dist sed
 .PHONY: freebsd freebsd-amd64
@@ -35,27 +35,27 @@ zip = @cd dist/$(1)-$(2) && zip -q ../$(app)-$(1)-$(2)-v$(ver).zip * && cd ..
 all: clean dist
 
 clean:
-	@rm -fr client/node_modules dist server/webapp
+	rm -fr client/node_modules dist server/webapp
 
 container: webapp linux-amd64
-	@podman login docker.io
-	@podman manifest rm localhost/rdio-scanner:latest || true
-	@podman build --platform linux/amd64,linux/arm,linux/arm64 --pull --manifest rdio-scanner:latest .
-	@podman manifest push --format v2s2 localhost/rdio-scanner:latest docker://docker.io/chuot/rdio-scanner:latest
+	podman login docker.io
+	podman manifest rm localhost/rdio-scanner:latest || true
+	podman build --platform linux/amd64,linux/arm,linux/arm64 --pull --manifest rdio-scanner:latest .
+	podman manifest push --format v2s2 localhost/rdio-scanner:latest docker://docker.io/chuot/rdio-scanner:latest
 
 dist: freebsd linux macos windows
 
 sed:
-	@sed -i -re "s|^(\s*\"version\":).*$$|\1 \"$(ver)\"|" client/package.json
-	@sed -i -re "s|^(const\s+Version\s+=).*$$|\1 \"$(ver)\"|" server/version.go
-	@sed -i -re "s|v[0-9]+\.[0-9]+\.[0-9]+|v$(ver)|" COMPILING.md README.md docs/docker/README.md docs/platforms/*.md
-	@sed -i -re "s|[0-9]{4}/[0-9]{2}/[0-9]{2}|$(date)|" docs/docker/README.md docs/platforms/*.md
+	sed -i -re "s|^(\s*\"version\":).*$$|\1 \"$(ver)\"|" client/package.json
+	sed -i -re "s|^(const\s+Version\s+=).*$$|\1 \"$(ver)\"|" server/version.go
+	sed -i -re "s|v[0-9]+\.[0-9]+\.[0-9]+|v$(ver)|" COMPILING.md README.md docs/docker/README.md docs/platforms/*.md
+	sed -i -re "s|[0-9]{4}/[0-9]{2}/[0-9]{2}|$(date)|" docs/docker/README.md docs/platforms/*.md
 
 webapp: server/webapp/index.html
 
 server/webapp/index.html: $(client)
-	@cd client && test -d node_modules || npm ci --loglevel=error --no-progress
-	@cd client && npm run build
+	cd client && test -d node_modules || npm ci --loglevel=error --no-progress
+	cd client && npm run build
 
 freebsd: freebsd-amd64
 freebsd-amd64: webapp dist/$(app)-freebsd-amd64-v$(ver).zip
