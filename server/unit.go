@@ -128,7 +128,7 @@ func (units *Units) Read(db *Database, systemId uint) error {
 		return fmt.Errorf("units.read: %v", err)
 	}
 
-	if rows, err = db.Sql.Query("select `id`, `label`, `order` from `rdioScannerUnits` where `systemId` = ?", systemId); err != nil {
+	if rows, err = db.Sql.Query("select `id`, `label`, `order` from `freeScannerUnits` where `systemId` = ?", systemId); err != nil {
 		return formatError(err)
 	}
 
@@ -170,7 +170,7 @@ func (units *Units) Write(db *Database, systemId uint) error {
 		return fmt.Errorf("units.write: %v", err)
 	}
 
-	if rows, err = db.Sql.Query("select `id` from `rdioScannerUnits` where `systemId` = ?", systemId); err != nil {
+	if rows, err = db.Sql.Query("select `id` from `freeScannerUnits` where `systemId` = ?", systemId); err != nil {
 		return formatError(err)
 	}
 
@@ -202,7 +202,7 @@ func (units *Units) Write(db *Database, systemId uint) error {
 			s := string(b)
 			s = strings.ReplaceAll(s, "[", "(")
 			s = strings.ReplaceAll(s, "]", ")")
-			q := fmt.Sprintf("delete from `rdioScannerUnits` where `id` in %v and `systemId` = %v", s, systemId)
+			q := fmt.Sprintf("delete from `freeScannerUnits` where `id` in %v and `systemId` = %v", s, systemId)
 			if _, err = db.Sql.Exec(q); err != nil {
 				return formatError(err)
 			}
@@ -210,16 +210,16 @@ func (units *Units) Write(db *Database, systemId uint) error {
 	}
 
 	for _, unit := range units.List {
-		if err = db.Sql.QueryRow("select count(*) from `rdioScannerUnits` where `id` = ? and `systemId` = ?", unit.Id, systemId).Scan(&count); err != nil {
+		if err = db.Sql.QueryRow("select count(*) from `freeScannerUnits` where `id` = ? and `systemId` = ?", unit.Id, systemId).Scan(&count); err != nil {
 			break
 		}
 
 		if count == 0 {
-			if _, err = db.Sql.Exec("insert into `rdioScannerUnits` (`id`, `label`, `order`, `systemId`) values (?, ?, ?, ?)", unit.Id, unit.Label, unit.Order, systemId); err != nil {
+			if _, err = db.Sql.Exec("insert into `freeScannerUnits` (`id`, `label`, `order`, `systemId`) values (?, ?, ?, ?)", unit.Id, unit.Label, unit.Order, systemId); err != nil {
 				break
 			}
 
-		} else if _, err = db.Sql.Exec("update `rdioScannerUnits` set `label` = ?, `order` = ? where `id` = ? and `systemId` = ?", unit.Label, unit.Order, unit.Id, systemId); err != nil {
+		} else if _, err = db.Sql.Exec("update `freeScannerUnits` set `label` = ?, `order` = ? where `id` = ? and `systemId` = ?", unit.Label, unit.Order, unit.Id, systemId); err != nil {
 			break
 		}
 	}

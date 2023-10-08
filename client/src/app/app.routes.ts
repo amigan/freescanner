@@ -7,10 +7,10 @@
  */
 
 import { Routes } from '@angular/router';
-import { routes as rdioScannerRoutes } from './pages/rdio-scanner';
+import { routes as freeScannerRoutes } from './pages/freescanner';
 
 export const routes: Routes = [
-    ...rdioScannerRoutes,
+    ...freeScannerRoutes,
     {
         path: '**',
         pathMatch: 'full',

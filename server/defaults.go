@@ -67,7 +67,7 @@ type DefaultOptions struct {
 }
 
 var defaults Defaults = Defaults{
-	adminPassword:           "rdio-scanner",
+	adminPassword:           "freescanner",
 	adminPasswordNeedChange: true,
 	access: DefaultAccess{
 		ident:   "Unknown",

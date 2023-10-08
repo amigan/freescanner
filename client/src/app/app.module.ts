@@ -23,7 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
-import { RdioScannerModule } from './components/rdio-scanner/rdio-scanner.module';
+import { FreeScannerModule } from './components/freescanner/freescanner.module';
 import { AppSharedModule } from './shared/shared.module';
 import { routes } from './app.routes';
 
@@ -31,7 +31,7 @@ import { routes } from './app.routes';
     bootstrap: [AppComponent],
     declarations: [AppComponent],
     imports: [
-        RdioScannerModule,
+        FreeScannerModule,
         AppSharedModule.forRoot({
             routerExtraOptions: { enableTracing: false },
             routerRoutes: routes,

@@ -143,7 +143,7 @@ func (db *Database) migrateWithSchema(name string, schemas []string, verbose boo
 		return fmt.Errorf("%s while doing %s", err.Error(), query)
 	}
 
-	query = fmt.Sprintf("select count(*) from `rdioScannerMeta` where `name` = '%s'", name)
+	query = fmt.Sprintf("select count(*) from `freeScannerMeta` where `name` = '%s'", name)
 	if err = db.Sql.QueryRow(query).Scan(&count); err != nil {
 		return formatError(err, query)
 	}
@@ -161,7 +161,7 @@ func (db *Database) migrateWithSchema(name string, schemas []string, verbose boo
 				}
 			}
 
-			query = fmt.Sprintf("insert into `rdioScannerMeta` (`name`) values ('%s')", name)
+			query = fmt.Sprintf("insert into `freeScannerMeta` (`name`) values ('%s')", name)
 			if _, err = tx.Exec(query); err != nil {
 				tx.Rollback()
 				return formatError(err, query)
@@ -181,67 +181,67 @@ func (db *Database) migration20191028144433(verbose bool) error {
 	var queries []string
 	if db.Config.DbType == DbTypeSqlite {
 		queries = []string{
-			"create table `rdioScannerSystems` (`id` integer primary key autoincrement, `createdAt` datetime not null, `updatedAt` datetime not null, `name` varchar(255) not null, `system` integer not null, `talkgroups` json not null)",
-			"create unique index `rdio_scanner_systems_system` on `rdioScannerSystems` (`system`)",
+			"create table `freeScannerSystems` (`id` integer primary key autoincrement, `createdAt` datetime not null, `updatedAt` datetime not null, `name` varchar(255) not null, `system` integer not null, `talkgroups` json not null)",
+			"create unique index `free_scanner_systems_system` on `freeScannerSystems` (`system`)",
 		}
 	} else {
 		queries = []string{
-			"create table `rdioScannerSystems` (`id` integer primary key auto_increment, `createdAt` datetime not null, `updatedAt` datetime not null, `name` varchar(255) not null, `system` integer not null, `talkgroups` json not null)",
-			"create unique index `rdio_scanner_systems_system` on `rdioScannerSystems` (`system`)",
+			"create table `freeScannerSystems` (`id` integer primary key auto_increment, `createdAt` datetime not null, `updatedAt` datetime not null, `name` varchar(255) not null, `system` integer not null, `talkgroups` json not null)",
+			"create unique index `free_scanner_systems_system` on `freeScannerSystems` (`system`)",
 		}
 	}
-	return db.migrateWithSchema("20191028144433-create-rdio-scanner-system", queries, verbose)
+	return db.migrateWithSchema("20191028144433-create-freescanner-system", queries, verbose)
 }
 
 func (db *Database) migration20191029092201(verbose bool) error {
 	var queries []string
 	if db.Config.DbType == DbTypeSqlite {
 		queries = []string{
-			"create table `rdioScannerCalls` (`id` integer primary key autoincrement, `createdAt` datetime not null, `updatedAt` datetime not null, `audio` longblob not null, `emergency` tinyint(1) not null, `freq` integer not null, `freqList` json not null, `startTime` datetime not null, `stopTime` datetime not null, `srcList` json not null, `system` integer not null, `talkgroup` integer not null)",
-			"create index `rdio_scanner_calls_start_time` on `rdioScannerCalls` (`startTime`)",
-			"create index `rdio_scanner_calls_system` on `rdioScannerCalls` (`system`)",
-			"create index `rdio_scanner_calls_talkgroup` on `rdioScannerCalls` (`talkgroup`)",
+			"create table `freeScannerCalls` (`id` integer primary key autoincrement, `createdAt` datetime not null, `updatedAt` datetime not null, `audio` longblob not null, `emergency` tinyint(1) not null, `freq` integer not null, `freqList` json not null, `startTime` datetime not null, `stopTime` datetime not null, `srcList` json not null, `system` integer not null, `talkgroup` integer not null)",
+			"create index `free_scanner_calls_start_time` on `freeScannerCalls` (`startTime`)",
+			"create index `free_scanner_calls_system` on `freeScannerCalls` (`system`)",
+			"create index `free_scanner_calls_talkgroup` on `freeScannerCalls` (`talkgroup`)",
 		}
 	} else {
 		queries = []string{
-			"create table `rdioScannerCalls` (`id` integer primary key auto_increment, `createdAt` datetime not null, `updatedAt` datetime not null, `audio` longblob not null, `emergency` tinyint(1) not null, `freq` integer not null, `freqList` json not null, `startTime` datetime not null, `stopTime` datetime not null, `srcList` json not null, `system` integer not null, `talkgroup` integer not null)",
-			"create index `rdio_scanner_calls_start_time` on `rdioScannerCalls` (`startTime`)",
-			"create index `rdio_scanner_calls_system` on `rdioScannerCalls` (`system`)",
-			"create index `rdio_scanner_calls_talkgroup` on `rdioScannerCalls` (`talkgroup`)",
+			"create table `freeScannerCalls` (`id` integer primary key auto_increment, `createdAt` datetime not null, `updatedAt` datetime not null, `audio` longblob not null, `emergency` tinyint(1) not null, `freq` integer not null, `freqList` json not null, `startTime` datetime not null, `stopTime` datetime not null, `srcList` json not null, `system` integer not null, `talkgroup` integer not null)",
+			"create index `free_scanner_calls_start_time` on `freeScannerCalls` (`startTime`)",
+			"create index `free_scanner_calls_system` on `freeScannerCalls` (`system`)",
+			"create index `free_scanner_calls_talkgroup` on `freeScannerCalls` (`talkgroup`)",
 		}
 	}
-	return db.migrateWithSchema("20191029092201-create-rdio-scanner-call", queries, verbose)
+	return db.migrateWithSchema("20191029092201-create-freescanner-call", queries, verbose)
 }
 
 func (db *Database) migration20191126135515(verbose bool) error {
 	var queries []string
 	if db.Config.DbType == DbTypeSqlite {
 		queries = []string{
-			"drop index `rdio_scanner_calls_system`",
-			"drop index `rdio_scanner_calls_talkgroup`",
+			"drop index `free_scanner_calls_system`",
+			"drop index `free_scanner_calls_talkgroup`",
 		}
 	} else {
 		queries = []string{
-			"drop index `rdio_scanner_calls_system` on `rdioScannerCalls`",
-			"drop index `rdio_scanner_calls_talkgroup` on `rdioScannerCalls`",
+			"drop index `free_scanner_calls_system` on `freeScannerCalls`",
+			"drop index `free_scanner_calls_talkgroup` on `freeScannerCalls`",
 		}
 	}
-	return db.migrateWithSchema("20191126135515-optimize-rdio-scanner-calls", queries, verbose)
+	return db.migrateWithSchema("20191126135515-optimize-freescanner-calls", queries, verbose)
 }
 
 func (db *Database) migration20191220093214(verbose bool) error {
 	var queries []string
 	if db.Config.DbType == DbTypeSqlite {
 		queries = []string{
-			"alter table `rdioScannerCalls` add column `audioName` varchar(255)",
-			"alter table `rdioScannerCalls` add column `audioType` varchar(255)",
-			"alter table `rdioScannerSystems` add column `aliases` json not null",
+			"alter table `freeScannerCalls` add column `audioName` varchar(255)",
+			"alter table `freeScannerCalls` add column `audioType` varchar(255)",
+			"alter table `freeScannerSystems` add column `aliases` json not null",
 		}
 	} else {
 		queries = []string{
-			"alter table `rdioScannerCalls` add column `audioName` varchar(255)",
-			"alter table `rdioScannerCalls` add column `audioType` varchar(255)",
-			"alter table `rdioScannerSystems` add column `aliases` json not null",
+			"alter table `freeScannerCalls` add column `audioName` varchar(255)",
+			"alter table `freeScannerCalls` add column `audioType` varchar(255)",
+			"alter table `freeScannerSystems` add column `aliases` json not null",
 		}
 	}
 	return db.migrateWithSchema("20191220093214-new-v3-tables", queries, verbose)
@@ -251,37 +251,37 @@ func (db *Database) migration20200123094105(verbose bool) error {
 	var queries []string
 	if db.Config.DbType == DbTypeSqlite {
 		queries = []string{
-			"create index `rdio_scanner_calls_system` on `rdioScannerCalls` (`system`)",
-			"create index `rdio_scanner_calls_system_talkgroup` on `rdioScannerCalls` (`system`, `talkgroup`)",
+			"create index `free_scanner_calls_system` on `freeScannerCalls` (`system`)",
+			"create index `free_scanner_calls_system_talkgroup` on `freeScannerCalls` (`system`, `talkgroup`)",
 		}
 	} else {
 		queries = []string{
-			"create index `rdio_scanner_calls_system` on `rdioScannerCalls` (`system`)",
-			"create index `rdio_scanner_calls_system_talkgroup` on `rdioScannerCalls` (`system`, `talkgroup`)",
+			"create index `free_scanner_calls_system` on `freeScannerCalls` (`system`)",
+			"create index `free_scanner_calls_system_talkgroup` on `freeScannerCalls` (`system`, `talkgroup`)",
 		}
 	}
-	return db.migrateWithSchema("20200123094105-optimize-rdio-scanner-calls", queries, verbose)
+	return db.migrateWithSchema("20200123094105-optimize-freescanner-calls", queries, verbose)
 }
 
 func (db *Database) migration20200428132918(verbose bool) error {
 	var queries []string
 	if db.Config.DbType == DbTypeSqlite {
 		queries = []string{
-			"drop table `rdioScannerSystems`",
-			"create table `rdioScannerCalls2` (`id` integer primary key autoincrement, `audio` longblob not null, `audioName` varchar(255), `audioType` varchar(255), `dateTime` datetime not null, `frequencies` json not null, `frequency` integer, `source` integer, `sources` json not null, `system` integer not null, `talkgroup` integer not null)",
-			"insert into `rdioScannerCalls2` select `id`, `audio`, `audioName`, `audioType`, `startTime`, `freqList`, `freq`, null, `srcList`, `system`, `talkgroup` from `rdioScannerCalls`",
-			"drop table `rdioScannerCalls`",
-			"alter table `rdioScannerCalls2` rename to `rdioScannerCalls`",
-			"create index `rdio_scanner_calls_date_time_system_talkgroup` on `rdioScannerCalls` (`dateTime`, `system`, `talkgroup`)",
+			"drop table `freeScannerSystems`",
+			"create table `freeScannerCalls2` (`id` integer primary key autoincrement, `audio` longblob not null, `audioName` varchar(255), `audioType` varchar(255), `dateTime` datetime not null, `frequencies` json not null, `frequency` integer, `source` integer, `sources` json not null, `system` integer not null, `talkgroup` integer not null)",
+			"insert into `freeScannerCalls2` select `id`, `audio`, `audioName`, `audioType`, `startTime`, `freqList`, `freq`, null, `srcList`, `system`, `talkgroup` from `freeScannerCalls`",
+			"drop table `freeScannerCalls`",
+			"alter table `freeScannerCalls2` rename to `freeScannerCalls`",
+			"create index `free_scanner_calls_date_time_system_talkgroup` on `freeScannerCalls` (`dateTime`, `system`, `talkgroup`)",
 		}
 	} else {
 		queries = []string{
-			"drop table `rdioScannerSystems`",
-			"create table `rdioScannerCalls2` (`id` integer primary key auto_increment, `audio` longblob not null, `audioName` varchar(255), `audioType` varchar(255), `dateTime` datetime not null, `frequencies` json not null, `frequency` integer, `source` integer, `sources` json not null, `system` integer not null, `talkgroup` integer not null)",
-			"insert into `rdioScannerCalls2` select `id`, `audio`, `audioName`, `audioType`, `startTime`, `freqList`, `freq`, null, `srcList`, `system`, `talkgroup` from `rdioScannerCalls`",
-			"drop table `rdioScannerCalls`",
-			"alter table `rdioScannerCalls2` rename to `rdioScannerCalls`",
-			"create index `rdio_scanner_calls_date_time_system_talkgroup` on `rdioScannerCalls` (`dateTime`, `system`, `talkgroup`)",
+			"drop table `freeScannerSystems`",
+			"create table `freeScannerCalls2` (`id` integer primary key auto_increment, `audio` longblob not null, `audioName` varchar(255), `audioType` varchar(255), `dateTime` datetime not null, `frequencies` json not null, `frequency` integer, `source` integer, `sources` json not null, `system` integer not null, `talkgroup` integer not null)",
+			"insert into `freeScannerCalls2` select `id`, `audio`, `audioName`, `audioType`, `startTime`, `freqList`, `freq`, null, `srcList`, `system`, `talkgroup` from `freeScannerCalls`",
+			"drop table `freeScannerCalls`",
+			"alter table `freeScannerCalls2` rename to `freeScannerCalls`",
+			"create index `free_scanner_calls_date_time_system_talkgroup` on `freeScannerCalls` (`dateTime`, `system`, `talkgroup`)",
 		}
 	}
 	return db.migrateWithSchema("20200428132918-new-v4-tables", queries, verbose)
@@ -291,41 +291,41 @@ func (db *Database) migration20210115105958(verbose bool) error {
 	var queries []string
 	if db.Config.DbType == DbTypeSqlite {
 		queries = []string{
-			"create table `rdioScannerAccesses` (`_id` integer primary key autoincrement, `code` varchar(255) not null unique, `expiration` datetime, `ident` varchar(255), `limit` integer, `order` integer, `systems` text not null)",
-			"create table `rdioScannerApiKeys` (`_id` integer primary key autoincrement, `disabled` tinyint(1) default 0, `ident` varchar(255), `key` varchar(255) not null unique, `order` integer, `systems` text not null)",
-			"create table `rdioScannerCalls2` (`id` integer primary key autoincrement, `audio` longblob not null, `audioName` varchar(255), `audioType` varchar(255), `dateTime` datetime not null, `frequencies` text not null, `frequency` integer, `source` integer, `sources` text not null, `system` integer not null, `talkgroup` integer not null)",
-			"create index `rdio_scanner_calls2_date_time_system_talkgroup` on `rdioScannerCalls2` (`dateTime`, `system`, `talkgroup`)",
-			"insert into `rdioScannerCalls2` select `id`, `audio`, `audioName`, `audioType`, `dateTime`, `frequencies`, `frequency`, `source`, `sources`, `system`, `talkgroup` from `rdioScannerCalls`",
-			"drop table `rdioScannerCalls`",
-			"alter table `rdioScannerCalls2` rename to `rdioScannerCalls`",
-			"create table `rdioScannerConfigs` (`_id` integer primary key autoincrement, `key` varchar(255) not null unique, `val` text not null)",
-			"create index `rdio_scanner_configs_key` on `rdioScannerConfigs` (`key`)",
-			"create table `rdioScannerDirWatches` (`_id` integer primary key autoincrement, `delay` integer default 0, `deleteAfter` tinyint(1) default 0, `directory` varchar(255) not null unique, `disabled` tinyint(1) default 0, `extension` varchar(255), `frequency` integer, `mask` varchar(255), `order` integer, `systemId` integer, `talkgroupId` integer, `type` varchar(255), `usePolling` tinyint(1) default 0)",
-			"create table `rdioScannerDownstreams` (`_id` integer primary key autoincrement, `apiKey` varchar(255) not null unique, `disabled` tinyint(1) default 0, `order` integer, `systems` text not null, `url` varchar(255) not null)",
-			"create table `rdioScannerGroups` (`_id` integer primary key autoincrement, `label` varchar(255) not null)",
-			"create table `rdioScannerLogs` (`_id` integer primary key autoincrement, `dateTime` datetime not null, `level` varchar(255) not null, `message` varchar(255) not null)",
-			"create index `rdio_scanner_logs_date_time_level` on `rdioScannerLogs` (`dateTime`, `level`)",
-			"create table `rdioScannerSystems` (`_id` integer primary key autoincrement, `autoPopulate` tinyint(1) default 0, `blacklists` text not null, `id` integer not null unique, `label` varchar(255) not null, `led` varchar(255), `order` integer, `talkgroups` text not null, `units` text not null)",
-			"create table `rdioScannerTags` (`_id` integer primary key autoincrement, `label` varchar(255) not null)",
+			"create table `freeScannerAccesses` (`_id` integer primary key autoincrement, `code` varchar(255) not null unique, `expiration` datetime, `ident` varchar(255), `limit` integer, `order` integer, `systems` text not null)",
+			"create table `freeScannerApiKeys` (`_id` integer primary key autoincrement, `disabled` tinyint(1) default 0, `ident` varchar(255), `key` varchar(255) not null unique, `order` integer, `systems` text not null)",
+			"create table `freeScannerCalls2` (`id` integer primary key autoincrement, `audio` longblob not null, `audioName` varchar(255), `audioType` varchar(255), `dateTime` datetime not null, `frequencies` text not null, `frequency` integer, `source` integer, `sources` text not null, `system` integer not null, `talkgroup` integer not null)",
+			"create index `free_scanner_calls2_date_time_system_talkgroup` on `freeScannerCalls2` (`dateTime`, `system`, `talkgroup`)",
+			"insert into `freeScannerCalls2` select `id`, `audio`, `audioName`, `audioType`, `dateTime`, `frequencies`, `frequency`, `source`, `sources`, `system`, `talkgroup` from `freeScannerCalls`",
+			"drop table `freeScannerCalls`",
+			"alter table `freeScannerCalls2` rename to `freeScannerCalls`",
+			"create table `freeScannerConfigs` (`_id` integer primary key autoincrement, `key` varchar(255) not null unique, `val` text not null)",
+			"create index `free_scanner_configs_key` on `freeScannerConfigs` (`key`)",
+			"create table `freeScannerDirWatches` (`_id` integer primary key autoincrement, `delay` integer default 0, `deleteAfter` tinyint(1) default 0, `directory` varchar(255) not null unique, `disabled` tinyint(1) default 0, `extension` varchar(255), `frequency` integer, `mask` varchar(255), `order` integer, `systemId` integer, `talkgroupId` integer, `type` varchar(255), `usePolling` tinyint(1) default 0)",
+			"create table `freeScannerDownstreams` (`_id` integer primary key autoincrement, `apiKey` varchar(255) not null unique, `disabled` tinyint(1) default 0, `order` integer, `systems` text not null, `url` varchar(255) not null)",
+			"create table `freeScannerGroups` (`_id` integer primary key autoincrement, `label` varchar(255) not null)",
+			"create table `freeScannerLogs` (`_id` integer primary key autoincrement, `dateTime` datetime not null, `level` varchar(255) not null, `message` varchar(255) not null)",
+			"create index `free_scanner_logs_date_time_level` on `freeScannerLogs` (`dateTime`, `level`)",
+			"create table `freeScannerSystems` (`_id` integer primary key autoincrement, `autoPopulate` tinyint(1) default 0, `blacklists` text not null, `id` integer not null unique, `label` varchar(255) not null, `led` varchar(255), `order` integer, `talkgroups` text not null, `units` text not null)",
+			"create table `freeScannerTags` (`_id` integer primary key autoincrement, `label` varchar(255) not null)",
 		}
 	} else {
 		queries = []string{
-			"create table `rdioScannerAccesses` (`_id` integer primary key auto_increment, `code` varchar(255) not null unique, `expiration` datetime, `ident` varchar(255), `limit` integer, `order` integer, `systems` text not null)",
-			"create table `rdioScannerApiKeys` (`_id` integer primary key auto_increment, `disabled` tinyint(1) default 0, `ident` varchar(255), `key` varchar(255) not null unique, `order` integer, `systems` text not null)",
-			"create table `rdioScannerCalls2` (`id` integer primary key auto_increment, `audio` longblob not null, `audioName` varchar(255), `audioType` varchar(255), `dateTime` datetime not null, `frequencies` text not null, `frequency` integer, `source` integer, `sources` text not null, `system` integer not null, `talkgroup` integer not null)",
-			"create index `rdio_scanner_calls2_date_time_system_talkgroup` on `rdioScannerCalls2` (`dateTime`, `system`, `talkgroup`)",
-			"insert into `rdioScannerCalls2` select `id`, `audio`, `audioName`, `audioType`, `dateTime`, `frequencies`, `frequency`, `source`, `sources`, `system`, `talkgroup` from `rdioScannerCalls`",
-			"drop table `rdioScannerCalls`",
-			"alter table `rdioScannerCalls2` rename to `rdioScannerCalls`",
-			"create table `rdioScannerConfigs` (`_id` integer primary key auto_increment, `key` varchar(255) not null unique, `val` text not null)",
-			"create index `rdio_scanner_configs_key` on `rdioScannerConfigs` (`key`)",
-			"create table `rdioScannerDirWatches` (`_id` integer primary key auto_increment, `delay` integer default 0, `deleteAfter` tinyint(1) default 0, `directory` varchar(255) not null unique, `disabled` tinyint(1) default 0, `extension` varchar(255), `frequency` integer, `mask` varchar(255), `order` integer, `systemId` integer, `talkgroupId` integer, `type` varchar(255), `usePolling` tinyint(1) default 0)",
-			"create table `rdioScannerDownstreams` (`_id` integer primary key auto_increment, `apiKey` varchar(255) not null unique, `disabled` tinyint(1) default 0, `order` integer, `systems` text not null, `url` varchar(255) not null)",
-			"create table `rdioScannerGroups` (`_id` integer primary key auto_increment, `label` varchar(255) not null)",
-			"create table `rdioScannerLogs` (`_id` integer primary key auto_increment, `dateTime` datetime not null, `level` varchar(255) not null, `message` varchar(255) not null)",
-			"create index `rdio_scanner_logs_date_time_level` on `rdioScannerLogs` (`dateTime`, `level`)",
-			"create table `rdioScannerSystems` (`_id` integer primary key auto_increment, `autoPopulate` tinyint(1) default 0, `blacklists` text not null, `id` integer not null unique, `label` varchar(255) not null, `led` varchar(255), `order` integer, `talkgroups` text not null, `units` text not null)",
-			"create table `rdioScannerTags` (`_id` integer primary key auto_increment, `label` varchar(255) not null)",
+			"create table `freeScannerAccesses` (`_id` integer primary key auto_increment, `code` varchar(255) not null unique, `expiration` datetime, `ident` varchar(255), `limit` integer, `order` integer, `systems` text not null)",
+			"create table `freeScannerApiKeys` (`_id` integer primary key auto_increment, `disabled` tinyint(1) default 0, `ident` varchar(255), `key` varchar(255) not null unique, `order` integer, `systems` text not null)",
+			"create table `freeScannerCalls2` (`id` integer primary key auto_increment, `audio` longblob not null, `audioName` varchar(255), `audioType` varchar(255), `dateTime` datetime not null, `frequencies` text not null, `frequency` integer, `source` integer, `sources` text not null, `system` integer not null, `talkgroup` integer not null)",
+			"create index `free_scanner_calls2_date_time_system_talkgroup` on `freeScannerCalls2` (`dateTime`, `system`, `talkgroup`)",
+			"insert into `freeScannerCalls2` select `id`, `audio`, `audioName`, `audioType`, `dateTime`, `frequencies`, `frequency`, `source`, `sources`, `system`, `talkgroup` from `freeScannerCalls`",
+			"drop table `freeScannerCalls`",
+			"alter table `freeScannerCalls2` rename to `freeScannerCalls`",
+			"create table `freeScannerConfigs` (`_id` integer primary key auto_increment, `key` varchar(255) not null unique, `val` text not null)",
+			"create index `free_scanner_configs_key` on `freeScannerConfigs` (`key`)",
+			"create table `freeScannerDirWatches` (`_id` integer primary key auto_increment, `delay` integer default 0, `deleteAfter` tinyint(1) default 0, `directory` varchar(255) not null unique, `disabled` tinyint(1) default 0, `extension` varchar(255), `frequency` integer, `mask` varchar(255), `order` integer, `systemId` integer, `talkgroupId` integer, `type` varchar(255), `usePolling` tinyint(1) default 0)",
+			"create table `freeScannerDownstreams` (`_id` integer primary key auto_increment, `apiKey` varchar(255) not null unique, `disabled` tinyint(1) default 0, `order` integer, `systems` text not null, `url` varchar(255) not null)",
+			"create table `freeScannerGroups` (`_id` integer primary key auto_increment, `label` varchar(255) not null)",
+			"create table `freeScannerLogs` (`_id` integer primary key auto_increment, `dateTime` datetime not null, `level` varchar(255) not null, `message` varchar(255) not null)",
+			"create index `free_scanner_logs_date_time_level` on `freeScannerLogs` (`dateTime`, `level`)",
+			"create table `freeScannerSystems` (`_id` integer primary key auto_increment, `autoPopulate` tinyint(1) default 0, `blacklists` text not null, `id` integer not null unique, `label` varchar(255) not null, `led` varchar(255), `order` integer, `talkgroups` text not null, `units` text not null)",
+			"create table `freeScannerTags` (`_id` integer primary key auto_increment, `label` varchar(255) not null)",
 		}
 	}
 	return db.migrateWithSchema("20210115105958-new-v5.1-tables", queries, verbose)
@@ -335,20 +335,20 @@ func (db *Database) migration20210830092027(verbose bool) error {
 	var queries []string
 	if db.Config.DbType == DbTypeSqlite {
 		queries = []string{
-			"create table `rdioScannerSystems2` (`_id` integer primary key autoincrement, `autoPopulate` tinyint(1) default 0, `blacklists` text not null, `id` integer not null unique, `label` varchar(255) not null, `led` varchar(255), `order` integer, `talkgroups` longtext not null, `units` longtext not null)",
-			"insert into `rdioScannerSystems2` select `_id`, `autoPopulate`, `blacklists`, `id`, `label`, `led`, `order`, `talkgroups`, `units` from `rdioScannerSystems`",
-			"drop table `rdioScannerSystems`",
-			"alter table `rdioScannerSystems2` rename to `rdioScannerSystems`",
-			"drop index `rdio_scanner_calls2_date_time_system_talkgroup`",
-			"create index `rdio_scanner_calls_date_time_system_talkgroup` on `rdioScannerCalls` (`dateTime`, `system`, `talkgroup`)",
+			"create table `freeScannerSystems2` (`_id` integer primary key autoincrement, `autoPopulate` tinyint(1) default 0, `blacklists` text not null, `id` integer not null unique, `label` varchar(255) not null, `led` varchar(255), `order` integer, `talkgroups` longtext not null, `units` longtext not null)",
+			"insert into `freeScannerSystems2` select `_id`, `autoPopulate`, `blacklists`, `id`, `label`, `led`, `order`, `talkgroups`, `units` from `freeScannerSystems`",
+			"drop table `freeScannerSystems`",
+			"alter table `freeScannerSystems2` rename to `freeScannerSystems`",
+			"drop index `free_scanner_calls2_date_time_system_talkgroup`",
+			"create index `free_scanner_calls_date_time_system_talkgroup` on `freeScannerCalls` (`dateTime`, `system`, `talkgroup`)",
 		}
 
 	} else {
 		queries = []string{
-			"alter table `rdioScannerSystems` modify `talkgroups` longtext null not null",
-			"alter table `rdioScannerSystems` modify `units` longtext null not null",
-			"drop index `rdio_scanner_calls2_date_time_system_talkgroup` on `rdioScannerCalls`",
-			"create index `rdio_scanner_calls_date_time_system_talkgroup` on `rdioScannerCalls` (`dateTime`, `system`, `talkgroup`)",
+			"alter table `freeScannerSystems` modify `talkgroups` longtext null not null",
+			"alter table `freeScannerSystems` modify `units` longtext null not null",
+			"drop index `free_scanner_calls2_date_time_system_talkgroup` on `freeScannerCalls`",
+			"create index `free_scanner_calls_date_time_system_talkgroup` on `freeScannerCalls` (`dateTime`, `system`, `talkgroup`)",
 		}
 	}
 	return db.migrateWithSchema("20210830092027-v6.0-rename-index", queries, verbose)
@@ -358,17 +358,17 @@ func (db *Database) migration20211202094819(verbose bool) error {
 	var queries []string
 	if db.Config.DbType == DbTypeSqlite {
 		queries = []string{
-			"alter table `rdioScannerDownstreams` rename to `rdioScannerDownstreams2`",
-			"create table `rdioScannerDownstreams` (`_id` integer primary key autoincrement, `apiKey` varchar(255) not null, `disabled` tinyint(1) default 0, `order` integer, `systems` text not null, `url` varchar(255) not null)",
-			"insert into `rdioScannerDownstreams` select * from `rdioScannerDownstreams2`",
-			"drop table `rdioScannerDownstreams2`",
+			"alter table `freeScannerDownstreams` rename to `freeScannerDownstreams2`",
+			"create table `freeScannerDownstreams` (`_id` integer primary key autoincrement, `apiKey` varchar(255) not null, `disabled` tinyint(1) default 0, `order` integer, `systems` text not null, `url` varchar(255) not null)",
+			"insert into `freeScannerDownstreams` select * from `freeScannerDownstreams2`",
+			"drop table `freeScannerDownstreams2`",
 		}
 	} else {
 		queries = []string{
-			"alter table `rdioScannerDownstreams` rename to `rdioScannerDownstreams2`",
-			"create table `rdioScannerDownstreams` (`_id` integer primary key auto_increment, `apiKey` varchar(255) not null, `disabled` tinyint(1) default 0, `order` integer, `systems` text not null, `url` varchar(255) not null)",
-			"insert into `rdioScannerDownstreams` select * from `rdioScannerDownstreams2`",
-			"drop table `rdioScannerDownstreams2`",
+			"alter table `freeScannerDownstreams` rename to `freeScannerDownstreams2`",
+			"create table `freeScannerDownstreams` (`_id` integer primary key auto_increment, `apiKey` varchar(255) not null, `disabled` tinyint(1) default 0, `order` integer, `systems` text not null, `url` varchar(255) not null)",
+			"insert into `freeScannerDownstreams` select * from `freeScannerDownstreams2`",
+			"drop table `freeScannerDownstreams2`",
 		}
 	}
 	return db.migrateWithSchema("20211202094819-v6.0.2-alter-table", queries, verbose)
@@ -391,32 +391,32 @@ func (db *Database) migration20220101070000(verbose bool) error {
 	)
 	if db.Config.DbType == DbTypeSqlite {
 		queries = []string{
-			"create table `rdioScannerCalls2` (`id` integer primary key autoincrement, `audio` longblob not null, `audioName` varchar(255), `audioType` varchar(255), `dateTime` datetime not null, `frequencies` text not null, `frequency` integer, `patches` text not null, `source` integer, `sources` text not null, `system` integer not null, `talkgroup` integer not null)",
-			"insert into `rdioScannerCalls2` select `id`, `audio`, `audioName`, `audioType`, `dateTime`, `frequencies`, `frequency`, '[]', `source`, `sources`, `system`, `talkgroup` from `rdioScannerCalls`",
-			"drop table `rdioScannerCalls`",
-			"alter table `rdioScannerCalls2` rename to `rdioScannerCalls`",
-			"create index `rdio_scanner_calls_date_time_system_talkgroup` on `rdioScannerCalls` (`dateTime`, `system`, `talkgroup`)",
-			"create table `rdioScannerSystems2` (`_id` integer primary key autoincrement, `autoPopulate` tinyint(1) default 0, `blacklists` text not null, `id` integer not null unique, `label` varchar(255) not null, `led` varchar(255), `order` integer)",
-			"insert into `rdioScannerSystems2` select `_id`, `autoPopulate`, `blacklists`, `id`, `label`, `led`, `order` from `rdioScannerSystems`",
-			"drop table `rdioScannerSystems`",
-			"alter table `rdioScannerSystems2` rename to `rdioScannerSystems`",
-			"create table `rdioScannerTalkgroups` (`_id` integer primary key autoincrement, `frequency` integer, `groupId` integer not null, `id` integer not null, `label` varchar(255) not null, `led` varchar(255), `name` varchar(255) not null, `order` integer, `systemId` integer not null, `tagId` integer not null)",
-			"create unique index `rdio_scanner_talkgroups_system_id_id` on `rdioScannerTalkgroups` (`systemId`, `id`)",
-			"create table `rdioScannerUnits` (`_id` integer primary key autoincrement, `id` integer not null, `label` varchar(255) not null, `order` integer, `systemId` integer not null)",
-			"create unique index `rdio_scanner_units_system_id_id` on `rdioScannerUnits` (`systemId`, `id`)",
+			"create table `freeScannerCalls2` (`id` integer primary key autoincrement, `audio` longblob not null, `audioName` varchar(255), `audioType` varchar(255), `dateTime` datetime not null, `frequencies` text not null, `frequency` integer, `patches` text not null, `source` integer, `sources` text not null, `system` integer not null, `talkgroup` integer not null)",
+			"insert into `freeScannerCalls2` select `id`, `audio`, `audioName`, `audioType`, `dateTime`, `frequencies`, `frequency`, '[]', `source`, `sources`, `system`, `talkgroup` from `freeScannerCalls`",
+			"drop table `freeScannerCalls`",
+			"alter table `freeScannerCalls2` rename to `freeScannerCalls`",
+			"create index `free_scanner_calls_date_time_system_talkgroup` on `freeScannerCalls` (`dateTime`, `system`, `talkgroup`)",
+			"create table `freeScannerSystems2` (`_id` integer primary key autoincrement, `autoPopulate` tinyint(1) default 0, `blacklists` text not null, `id` integer not null unique, `label` varchar(255) not null, `led` varchar(255), `order` integer)",
+			"insert into `freeScannerSystems2` select `_id`, `autoPopulate`, `blacklists`, `id`, `label`, `led`, `order` from `freeScannerSystems`",
+			"drop table `freeScannerSystems`",
+			"alter table `freeScannerSystems2` rename to `freeScannerSystems`",
+			"create table `freeScannerTalkgroups` (`_id` integer primary key autoincrement, `frequency` integer, `groupId` integer not null, `id` integer not null, `label` varchar(255) not null, `led` varchar(255), `name` varchar(255) not null, `order` integer, `systemId` integer not null, `tagId` integer not null)",
+			"create unique index `free_scanner_talkgroups_system_id_id` on `freeScannerTalkgroups` (`systemId`, `id`)",
+			"create table `freeScannerUnits` (`_id` integer primary key autoincrement, `id` integer not null, `label` varchar(255) not null, `order` integer, `systemId` integer not null)",
+			"create unique index `free_scanner_units_system_id_id` on `freeScannerUnits` (`systemId`, `id`)",
 		}
 	} else {
 		queries = []string{
-			"alter table `rdioScannerCalls` add column `patches` text not null",
-			"alter table `rdioScannerSystems` drop column `talkgroups`",
-			"alter table `rdioScannerSystems` drop column `units`",
-			"create table `rdioScannerTalkgroups` (`_id` integer primary key auto_increment, `frequency` integer, `groupId` integer not null, `id` integer not null, `label` varchar(255) not null, `led` varchar(255), `name` varchar(255) not null, `order` integer, `systemId` integer not null, `tagId` integer not null)",
-			"create unique index `rdio_scanner_talkgroups_system_id_id` on `rdioScannerTalkgroups` (`systemId`, `id`)",
-			"create table `rdioScannerUnits` (`_id` integer primary key auto_increment, `id` integer not null, `label` varchar(255) not null, `order` integer, `systemId` integer not null)",
-			"create unique index `rdio_scanner_units_system_id_id` on `rdioScannerUnits` (`systemId`, `id`)",
+			"alter table `freeScannerCalls` add column `patches` text not null",
+			"alter table `freeScannerSystems` drop column `talkgroups`",
+			"alter table `freeScannerSystems` drop column `units`",
+			"create table `freeScannerTalkgroups` (`_id` integer primary key auto_increment, `frequency` integer, `groupId` integer not null, `id` integer not null, `label` varchar(255) not null, `led` varchar(255), `name` varchar(255) not null, `order` integer, `systemId` integer not null, `tagId` integer not null)",
+			"create unique index `free_scanner_talkgroups_system_id_id` on `freeScannerTalkgroups` (`systemId`, `id`)",
+			"create table `freeScannerUnits` (`_id` integer primary key auto_increment, `id` integer not null, `label` varchar(255) not null, `order` integer, `systemId` integer not null)",
+			"create unique index `free_scanner_units_system_id_id` on `freeScannerUnits` (`systemId`, `id`)",
 		}
 	}
-	if rows, err = db.Sql.Query("select `id`, `talkgroups`, `units` from `rdioScannerSystems`"); err == nil {
+	if rows, err = db.Sql.Query("select `id`, `talkgroups`, `units` from `freeScannerSystems`"); err == nil {
 		for rows.Next() {
 			if err = rows.Scan(&id, &stra, &strb); err != nil {
 				break
@@ -443,12 +443,12 @@ func (db *Database) migration20220101070000(verbose bool) error {
 				}
 				name = strings.ReplaceAll(tg.Name, "'", "''")
 				tg.Order = uint(i + 1)
-				queries = append(queries, fmt.Sprintf("insert into `rdioScannerTalkgroups` (`frequency`, `groupId`, `id`, `label`, `led`, `name`, `order`, `systemId`, `tagId`) values (%v, %v, %v, '%v', %v, '%v', %v, %v, %v)", frequency, tg.GroupId, tg.Id, label, led, name, tg.Order, id, tg.TagId))
+				queries = append(queries, fmt.Sprintf("insert into `freeScannerTalkgroups` (`frequency`, `groupId`, `id`, `label`, `led`, `name`, `order`, `systemId`, `tagId`) values (%v, %v, %v, '%v', %v, '%v', %v, %v, %v)", frequency, tg.GroupId, tg.Id, label, led, name, tg.Order, id, tg.TagId))
 			}
 			for i, unit := range units {
 				label = strings.ReplaceAll(unit.Label, "'", "''")
 				unit.Order = uint(i + 1)
-				queries = append(queries, fmt.Sprintf("insert into `rdioScannerUnits` (`id`, `label`, `order`, `systemId`) values (%v, '%v', %v, %v)", unit.Id, label, unit.Order, id))
+				queries = append(queries, fmt.Sprintf("insert into `freeScannerUnits` (`id`, `label`, `order`, `systemId`) values (%v, '%v', %v, %v)", unit.Id, label, unit.Order, id))
 			}
 		}
 		rows.Close()
@@ -466,16 +466,16 @@ func (db *Database) prepareMigration() (bool, error) {
 		query   string
 	)
 
-	query = "select count(*) as count from `rdioScannerMeta`"
+	query = "select count(*) as count from `freeScannerMeta`"
 	if _, err = db.Sql.Exec(query); err != nil {
 		query = "select count(*) as count from `SequelizeMeta`"
 		if _, err = db.Sql.Exec(query); err == nil {
 			log.Println("Preparing for database migration")
-			query = "alter table `SequelizeMeta` rename to `rdioScannerMeta`"
+			query = "alter table `SequelizeMeta` rename to `freeScannerMeta`"
 			_, err = db.Sql.Exec(query)
 		} else {
 			verbose = false
-			query = "create table `rdioScannerMeta` (name varchar(255) not null unique primary key)"
+			query = "create table `freeScannerMeta` (name varchar(255) not null unique primary key)"
 			_, err = db.Sql.Exec(query)
 		}
 	}
@@ -502,14 +502,14 @@ func (db *Database) seedGroups() error {
 		return fmt.Errorf("database.seedgroups: %s", err.Error())
 	}
 
-	if err := db.Sql.QueryRow("select count(*) from `rdioScannerGroups`").Scan(&count); err != nil {
+	if err := db.Sql.QueryRow("select count(*) from `freeScannerGroups`").Scan(&count); err != nil {
 		return formatError(err)
 	}
 
 	if count == 0 {
 		if tx, err := db.Sql.Begin(); err == nil {
 			for _, group := range defaults.groups {
-				if _, err := tx.Exec("insert into `rdioScannerGroups` (`label`) values (?)", group); err != nil {
+				if _, err := tx.Exec("insert into `freeScannerGroups` (`label`) values (?)", group); err != nil {
 					tx.Rollback()
 					return formatError(err)
 				}
@@ -534,14 +534,14 @@ func (db *Database) seedTags() error {
 		return fmt.Errorf("database.seedtags: %s", err.Error())
 	}
 
-	if err := db.Sql.QueryRow("select count(*) from `rdioScannerTags`").Scan(&count); err != nil {
+	if err := db.Sql.QueryRow("select count(*) from `freeScannerTags`").Scan(&count); err != nil {
 		return formatError(err)
 	}
 
 	if count == 0 {
 		if tx, err := db.Sql.Begin(); err == nil {
 			for _, group := range defaults.tags {
-				if _, err := tx.Exec("insert into `rdioScannerTags` (`label`) values (?)", group); err != nil {
+				if _, err := tx.Exec("insert into `freeScannerTags` (`label`) values (?)", group); err != nil {
 					tx.Rollback()
 					return formatError(err)
 				}

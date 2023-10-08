@@ -52,7 +52,7 @@ const (
 	COMMAND_USER_ADD       = "user-add"
 	COMMAND_USER_REMOVE    = "user-remove"
 
-	COMMAND_DEF_PASSWORD = "rdio-scanner"
+	COMMAND_DEF_PASSWORD = "freescanner"
 	COMMAND_DEF_URL      = "http://localhost:3000/"
 )
 
@@ -74,7 +74,7 @@ type Command struct {
 
 func NewCommand(baseDir string) *Command {
 	app, _ := os.Executable()
-	pass := os.Getenv("RDIO_ADMIN_PASSWORD")
+	pass := os.Getenv("FREESCANNER_ADMIN_PASSWORD")
 
 	if pass == "" {
 		pass = COMMAND_DEF_PASSWORD
@@ -201,7 +201,7 @@ func (command *Command) printUsage() {
 	fmt.Printf("    %-11s %s%s -%s %s %s <file.json>\n\n", "", prompt, command.app, COMMAND_ARG, COMMAND_CONFIG_SET, COMMAND_ARG_IN)
 	fmt.Printf("  %-11s – Login to server.\n\n", COMMAND_LOGIN)
 	if runtime.GOOS != "windows" {
-		fmt.Printf("    %-11s $ RDIO_ADMIN_PASSWORD=<password> ./%s -%s %s\n", "", command.app, COMMAND_ARG, COMMAND_LOGIN)
+		fmt.Printf("    %-11s $ FREESCANNER_ADMIN_PASSWORD=<password> ./%s -%s %s\n", "", command.app, COMMAND_ARG, COMMAND_LOGIN)
 	}
 	fmt.Printf("    %-11s %s%s -%s %s %s <password>\n\n", "", prompt, command.app, COMMAND_ARG, COMMAND_LOGIN, COMMAND_ARG_PASSWORD)
 	fmt.Printf("  %-11s – Logout from server.\n\n", COMMAND_LOGOUT)

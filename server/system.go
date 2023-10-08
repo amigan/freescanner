@@ -339,7 +339,7 @@ func (systems *Systems) Read(db *Database) error {
 		return fmt.Errorf("systems.read: %v", err)
 	}
 
-	if rows, err = db.Sql.Query("select `_id`, `autoPopulate`, `blacklists`, `id`, `label`, `led`, `order` from `rdioScannerSystems`"); err != nil {
+	if rows, err = db.Sql.Query("select `_id`, `autoPopulate`, `blacklists`, `id`, `label`, `led`, `order` from `freeScannerSystems`"); err != nil {
 		return formatError(err)
 	}
 
@@ -412,7 +412,7 @@ func (systems *Systems) Write(db *Database) error {
 		return fmt.Errorf("systems.write: %v", err)
 	}
 
-	if rows, err = db.Sql.Query("select `_id`, `id` from `rdioScannerSystems`"); err != nil {
+	if rows, err = db.Sql.Query("select `_id`, `id` from `freeScannerSystems`"); err != nil {
 		return formatError(err)
 	}
 
@@ -446,7 +446,7 @@ func (systems *Systems) Write(db *Database) error {
 			s := string(b)
 			s = strings.ReplaceAll(s, "[", "(")
 			s = strings.ReplaceAll(s, "]", ")")
-			q := fmt.Sprintf("delete from `rdioScannerSystems` where `_id` in %v", s)
+			q := fmt.Sprintf("delete from `freeScannerSystems` where `_id` in %v", s)
 			if _, err = db.Sql.Exec(q); err != nil {
 				return formatError(err)
 			}
@@ -458,11 +458,11 @@ func (systems *Systems) Write(db *Database) error {
 			s := string(b)
 			s = strings.ReplaceAll(s, "[", "(")
 			s = strings.ReplaceAll(s, "]", ")")
-			q := fmt.Sprintf("delete from `rdioScannerTalkgroups` where `systemId` in %v", s)
+			q := fmt.Sprintf("delete from `freeScannerTalkgroups` where `systemId` in %v", s)
 			if _, err = db.Sql.Exec(q); err != nil {
 				return formatError(err)
 			}
-			q = fmt.Sprintf("delete from `rdioScannerUnits` where `systemId` in %v", s)
+			q = fmt.Sprintf("delete from `freeScannerUnits` where `systemId` in %v", s)
 			if _, err = db.Sql.Exec(q); err != nil {
 				return formatError(err)
 			}
@@ -476,16 +476,16 @@ func (systems *Systems) Write(db *Database) error {
 			blacklists = "[]"
 		}
 
-		if err = db.Sql.QueryRow("select count(*) from `rdioScannerSystems` where `_id` = ?", system.RowId).Scan(&count); err != nil {
+		if err = db.Sql.QueryRow("select count(*) from `freeScannerSystems` where `_id` = ?", system.RowId).Scan(&count); err != nil {
 			break
 		}
 
 		if count == 0 {
-			if _, err = db.Sql.Exec("insert into `rdioScannerSystems` (`_id`, `autoPopulate`, `blacklists`, `id`, `label`, `led`, `order`) values (?, ?, ?, ?, ?, ?, ?)", system.RowId, system.AutoPopulate, blacklists, system.Id, system.Label, system.Led, system.Order); err != nil {
+			if _, err = db.Sql.Exec("insert into `freeScannerSystems` (`_id`, `autoPopulate`, `blacklists`, `id`, `label`, `led`, `order`) values (?, ?, ?, ?, ?, ?, ?)", system.RowId, system.AutoPopulate, blacklists, system.Id, system.Label, system.Led, system.Order); err != nil {
 				break
 			}
 
-		} else if _, err = db.Sql.Exec("update `rdioScannerSystems` set `_id` = ?, `autoPopulate` = ?, `blacklists` = ?, `id` = ?, `label` = ?, `led` = ?, `order` = ? where `_id` = ?", system.RowId, system.AutoPopulate, blacklists, system.Id, system.Label, system.Led, system.Order, system.RowId); err != nil {
+		} else if _, err = db.Sql.Exec("update `freeScannerSystems` set `_id` = ?, `autoPopulate` = ?, `blacklists` = ?, `id` = ?, `label` = ?, `led` = ?, `order` = ? where `_id` = ?", system.RowId, system.AutoPopulate, blacklists, system.Id, system.Label, system.Led, system.Order, system.RowId); err != nil {
 			break
 		}
 

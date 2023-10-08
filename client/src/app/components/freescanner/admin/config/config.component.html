@@ -1,0 +1,90 @@
+<form *ngIf="form" autocomplete="off" [formGroup]="form" (ngSubmit)="save()">
+    <mat-accordion displayMode="flat">
+        <mat-expansion-panel (afterCollapse)="accessComponent.closeAll()">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon>manage_accounts</mat-icon>
+                    Access
+                    <mat-icon *ngIf="form?.get('access')?.invalid" color="warn">error</mat-icon>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <freescanner-admin-access #accessComponent [form]="access"></freescanner-admin-access>
+        </mat-expansion-panel>
+        <mat-expansion-panel (afterCollapse)="apiKeyComponent.closeAll()">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon>vpn_key</mat-icon>
+                    ApiKey
+                    <mat-icon *ngIf="form?.get('apiKey')?.invalid" color="warn">error</mat-icon>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <freescanner-admin-api-keys #apiKeyComponent [form]="apiKeys"></freescanner-admin-api-keys>
+        </mat-expansion-panel>
+        <mat-expansion-panel *ngIf="!docker" (afterCollapse)="dirWatchComponent.closeAll()">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon>folder</mat-icon>
+                    Dirwatch
+                    <mat-icon *ngIf="form?.get('dirWatch')?.invalid" color="warn">error</mat-icon>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <freescanner-admin-dir-watch #dirWatchComponent [form]="dirWatch"></freescanner-admin-dir-watch>
+        </mat-expansion-panel>
+        <mat-expansion-panel (afterCollapse)="downstreamsComponent.closeAll()">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon>share</mat-icon>
+                    Downstreams
+                    <mat-icon *ngIf="form?.get('downstreams')?.invalid" color="warn">error</mat-icon>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <freescanner-admin-downstreams #downstreamsComponent [form]="downstreams"></freescanner-admin-downstreams>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon>workspaces</mat-icon>
+                    Groups
+                    <mat-icon *ngIf="form?.get('groups')?.invalid" color="warn">error</mat-icon>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <freescanner-admin-groups [form]="groups"></freescanner-admin-groups>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon>tune</mat-icon>
+                    Options
+                    <mat-icon *ngIf="form?.get('options')?.invalid" color="warn">error</mat-icon>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <freescanner-admin-options [form]="options"></freescanner-admin-options>
+        </mat-expansion-panel>
+        <mat-expansion-panel (afterCollapse)="systemsComponent.closeAll()">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon>podcasts</mat-icon>
+                    Systems
+                    <mat-icon *ngIf="form?.get('systems')?.invalid" color="warn">error</mat-icon>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <freescanner-admin-systems #systemsComponent [form]="systems"></freescanner-admin-systems>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon>sell</mat-icon>
+                    Tags
+                    <mat-icon *ngIf="form?.get('tags')?.invalid" color="warn">error</mat-icon>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <freescanner-admin-tags [form]="tags"></freescanner-admin-tags>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <div class="row bottom">
+        <button type="button" mat-raised-button [disabled]="form.disabled || form.pristine"
+            (click)="reset()">Reset</button>
+        <button type="submit" mat-raised-button color="primary"
+            [disabled]="form.disabled || form.pristine || !form.valid">Save</button>
+    </div>
+</form>

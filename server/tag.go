@@ -178,7 +178,7 @@ func (tags *Tags) Read(db *Database) error {
 		return fmt.Errorf("tags read: %v", err)
 	}
 
-	if rows, err = db.Sql.Query("select `_id`, `label` from `rdioScannerTags`"); err != nil {
+	if rows, err = db.Sql.Query("select `_id`, `label` from `freeScannerTags`"); err != nil {
 		return formatError(err)
 	}
 
@@ -220,7 +220,7 @@ func (tags *Tags) Write(db *Database) error {
 		return fmt.Errorf("tags write %v", err)
 	}
 
-	if rows, err = db.Sql.Query("select `_id` from `rdioScannerTags`"); err != nil {
+	if rows, err = db.Sql.Query("select `_id` from `freeScannerTags`"); err != nil {
 		return formatError(err)
 	}
 
@@ -252,7 +252,7 @@ func (tags *Tags) Write(db *Database) error {
 			s := string(b)
 			s = strings.ReplaceAll(s, "[", "(")
 			s = strings.ReplaceAll(s, "]", ")")
-			q := fmt.Sprintf("delete from `rdioScannerTags` where `_id` in %v", s)
+			q := fmt.Sprintf("delete from `freeScannerTags` where `_id` in %v", s)
 			if _, err = db.Sql.Exec(q); err != nil {
 				return formatError(err)
 			}
@@ -260,15 +260,15 @@ func (tags *Tags) Write(db *Database) error {
 	}
 
 	for _, tag := range tags.List {
-		if err = db.Sql.QueryRow("select count(*) from `rdioScannerTags` where `_id` = ?", tag.Id).Scan(&count); err != nil {
+		if err = db.Sql.QueryRow("select count(*) from `freeScannerTags` where `_id` = ?", tag.Id).Scan(&count); err != nil {
 			break
 		}
 
 		if count == 0 {
-			if _, err = db.Sql.Exec("insert into `rdioScannerTags` (`_id`, `label`) values (?, ?)", tag.Id, tag.Label); err != nil {
+			if _, err = db.Sql.Exec("insert into `freeScannerTags` (`_id`, `label`) values (?, ?)", tag.Id, tag.Label); err != nil {
 				break
 			}
-		} else if _, err = db.Sql.Exec("update `rdioScannerTags` set `_id` = ?, `label` = ? where `_id` = ?", tag.Id, tag.Label, tag.Id); err != nil {
+		} else if _, err = db.Sql.Exec("update `freeScannerTags` set `_id` = ?, `label` = ? where `_id` = ?", tag.Id, tag.Label, tag.Id); err != nil {
 			break
 		}
 	}

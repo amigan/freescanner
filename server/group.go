@@ -178,7 +178,7 @@ func (groups *Groups) Read(db *Database) error {
 		return fmt.Errorf("groups.read: %v", err)
 	}
 
-	if rows, err = db.Sql.Query("select `_id`, `label` from `rdioScannerGroups`"); err != nil {
+	if rows, err = db.Sql.Query("select `_id`, `label` from `freeScannerGroups`"); err != nil {
 		return formatError(err)
 	}
 
@@ -224,7 +224,7 @@ func (groups *Groups) Write(db *Database) error {
 		return fmt.Errorf("groups.write %v", err)
 	}
 
-	if rows, err = db.Sql.Query("select `_id` from `rdioScannerGroups`"); err != nil {
+	if rows, err = db.Sql.Query("select `_id` from `freeScannerGroups`"); err != nil {
 		return formatError(err)
 	}
 
@@ -256,7 +256,7 @@ func (groups *Groups) Write(db *Database) error {
 			s := string(b)
 			s = strings.ReplaceAll(s, "[", "(")
 			s = strings.ReplaceAll(s, "]", ")")
-			q := fmt.Sprintf("delete from `rdioScannerGroups` where `_id` in %v", s)
+			q := fmt.Sprintf("delete from `freeScannerGroups` where `_id` in %v", s)
 			if _, err = db.Sql.Exec(q); err != nil {
 				return formatError(err)
 			}
@@ -264,16 +264,16 @@ func (groups *Groups) Write(db *Database) error {
 	}
 
 	for _, group := range groups.List {
-		if err = db.Sql.QueryRow("select count(*) from `rdioScannerGroups` where `_id` = ?", group.Id).Scan(&count); err != nil {
+		if err = db.Sql.QueryRow("select count(*) from `freeScannerGroups` where `_id` = ?", group.Id).Scan(&count); err != nil {
 			break
 		}
 
 		if count == 0 {
-			if _, err = db.Sql.Exec("insert into `rdioScannerGroups` (`_id`, `label`) values (?, ?)", group.Id, group.Label); err != nil {
+			if _, err = db.Sql.Exec("insert into `freeScannerGroups` (`_id`, `label`) values (?, ?)", group.Id, group.Label); err != nil {
 				break
 			}
 
-		} else if _, err = db.Sql.Exec("update `rdioScannerGroups` set `_id` = ?, `label` = ? where `_id` = ?", group.Id, group.Label, group.Id); err != nil {
+		} else if _, err = db.Sql.Exec("update `freeScannerGroups` set `_id` = ?, `label` = ? where `_id` = ?", group.Id, group.Label, group.Id); err != nil {
 			break
 		}
 	}

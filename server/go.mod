@@ -1,4 +1,4 @@
-module rdio-scanner/server
+module freescanner/server
 
 go 1.18
 

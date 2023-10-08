@@ -1,17 +1,17 @@
 # Updating from version 5
 
-[Rdio Scanner](https://github.com/chuot/rdio-scanner) has its server component completely rewritten in [GO](https://go.dev). Therefore, it is no longer possible to upgrade to version 6 as with previous versions.
+[FreeScanner](https://github.com/amigan/freescanner) has its server component completely rewritten in [GO](https://go.dev). Therefore, it is no longer possible to upgrade to version 6 as with previous versions.
 
-You need to download the latest Rdio Scanner release from the [releases tab](https://github.com/chuot/rdio-scanner/releases) on the [main page](https://github.com/chuot/rdio-scanner).
+You need to download the latest FreeScanner release from the [releases tab](https://github.com/amigan/freescanner/releases) on the [main page](https://github.com/amigan/freescanner).
 
 > REMEMBER TO ALWAYS BACKUP YOUR DATABASE BEFORE ATTEMPTING AN UPDATE.
 
 ## Update steps for the standard sqlite database
 
-- Make sure your instance is at the [latest version 5](https://github.com/chuot/rdio-scanner/tree/3f2b184558e82317a010bd667ac3972f30998b1c) before trying to upgrade to version 6.
+- Make sure your instance is at the [latest version 5](https://github.com/amigan/freescanner/tree/3f2b184558e82317a010bd667ac3972f30998b1c) before trying to upgrade to version 6.
 - Stop your version 5 instance.
 - Copy your old version 5 `database.sqlite` to a new folder where version 6 will be installed.
-- Rename the database copy to `rdio-scanner.db`, the new default name.
+- Rename the database copy to `freescanner.db`, the new default name.
 - Run the new version 6 executable to update the database.
 - Keep reading the PDF document that comes with the version 6 to make your instance as a service.
 
@@ -24,13 +24,13 @@ You need to download the latest Rdio Scanner release from the [releases tab](htt
 
 ## What if it is too late
 
-Revert back to the latest [version 5.2.9](https://github.com/chuot/rdio-scanner/tree/3f2b184558e82317a010bd667ac3972f30998b1c) with the following commands:
+Revert back to the latest [version 5.2.9](https://github.com/amigan/freescanner/tree/3f2b184558e82317a010bd667ac3972f30998b1c) with the following commands:
 
-- cd .../rdio-scanner
+- cd .../freescanner
 - git checkout 3f2b184
 - cd client
 - npm ci
 - npm run build
 - cd ../server
 - npm ci
-- restart your Rdio Scanner instance as usual
+- restart your FreeScanner instance as usual

@@ -3,3 +3,6 @@
 *.token
 /build
 /dist
+*.db
+*.pdf
+freescanner

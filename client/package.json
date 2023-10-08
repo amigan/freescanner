@@ -1,5 +1,5 @@
 {
-    "author": "Chrystian Huot <chrystian.huot@saubeo.solutions>",
+    "author": "Dan Ponte <amigan@gmail.com>, Chrystian Huot",
     "dependencies": {
         "@angular/animations": "^13.3.10",
         "@angular/cdk": "^13.3.8",
@@ -32,7 +32,7 @@
         "node": ">=16.0"
     },
     "license": "LICENSE",
-    "name": "rdio-scanner",
+    "name": "freescanner",
     "private": true,
     "scripts": {
         "build": "ng build --base-href ./ --configuration production",

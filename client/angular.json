@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "rdio-scanner": {
+    "freescanner": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -15,7 +15,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "rdio-scanner",
+      "prefix": "freescanner",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -75,10 +75,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "rdio-scanner:build:production"
+              "browserTarget": "freescanner:build:production"
             },
             "development": {
-              "browserTarget": "rdio-scanner:build:development",
+              "browserTarget": "freescanner:build:development",
               "proxyConfig": "src/proxy.conf.js"
             }
           },
@@ -87,7 +87,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "rdio-scanner:build"
+            "browserTarget": "freescanner:build"
           }
         },
         "test": {
@@ -112,5 +112,5 @@
       }
     }
   },
-  "defaultProject": "rdio-scanner"
+  "defaultProject": "freescanner"
 }

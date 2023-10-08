@@ -70,7 +70,7 @@ func main() {
 		}
 	}
 
-	fmt.Printf("\nRdio Scanner v%s\n", Version)
+	fmt.Printf("\nFreeScanner v%s\n", Version)
 	fmt.Printf("----------------------------------\n")
 
 	if err := controller.Start(); err != nil {

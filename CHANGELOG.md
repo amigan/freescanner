@@ -303,13 +303,13 @@ _v6.1.16_
 
 ### BREAKING CHANGES SINCE V5
 
-[Rdio Scanner](https://github.com/chuot/rdio-scanner) is now distributed as a precompiled executable in a zip file, which also contains documentation on how it works.
+[FreeScanner](https://github.com/amigan/freescanner) is now distributed as a precompiled executable in a zip file, which also contains documentation on how it works.
 
 The backend server has been completely rewritten in GO language. Therefore, all the subpackages used in v5 had to be replaced with new ones. These new subpackages do not necessarily have the same functionality as those of v5.
 
 - No more polling mode for _dirwatch_, which in a way is a good thing as polling was disastrous for CPU consumption. The alternative is to install a local instance and use the downstream feature to feed your main instance.
-- Due to the polling situation, the Docker version of Rdio Scanner doesn't have the dirwatch feature.
-- Default database name changed from _database.sqlite_ to _rdio-scanner.db_. You will need to rename your database file with the new name if you want to convert it. Otherwise, a new database will be created.
+- Due to the polling situation, the Docker version of FreeScanner doesn't have the dirwatch feature.
+- Default database name changed from _database.sqlite_ to _freescanner.db_. You will need to rename your database file with the new name if you want to convert it. Otherwise, a new database will be created.
 
 _v6.0.1_
 
@@ -332,7 +332,7 @@ _v6.0.4_
 
 - Fixed wrong time calculation in prune scheduler.
 - More fix on the SQL_BUSY error (issue #67).
-- Support files (certs, db, ini) are now created in the same folder as the executable, if the folder is writable, or under a `Rdio Scanner` folder in the user's home folder.
+- Support files (certs, db, ini) are now created in the same folder as the executable, if the folder is writable, or under a `FreeScanner` folder in the user's home folder.
 - Some code refactoring.
 
 _v6.0.5_
@@ -440,9 +440,9 @@ _v5.1.2_
 
 ## Version 5.0
 
-- Add rdioScanner.options.autoPopulate which by default is true. The configuration file will now be automatically populated from new received calls with unknown system/talkgroup.
-- Add rdioScanner.options.sortTalkgroupswhich by default is false. Sort talkgroups based on their ID.
-- Remove default rdioScanner.systems for new installation, since now we have autoPopulate.
+- Add freeScanner.options.autoPopulate which by default is true. The configuration file will now be automatically populated from new received calls with unknown system/talkgroup.
+- Add freeScanner.options.sortTalkgroupswhich by default is false. Sort talkgroups based on their ID.
+- Remove default freeScanner.systems for new installation, since now we have autoPopulate.
 - Node modules update.
 
 _v5.0.1_
@@ -452,7 +452,7 @@ _v5.0.1_
 
 _v5.0.2_
 
-- Fixed rdioScanner.options.disableAudioConversion which was ignored when true.
+- Fixed freeScanner.options.disableAudioConversion which was ignored when true.
 
 _v5.0.3_
 
@@ -627,9 +627,9 @@ _v4.7.6_
 ### Upgrading from version 3
 
 - Your `server/.env` file will be used to create the new `server/config.json` file. Then the `server/.env` will be deleted.
-- The `rdioScannerSystems` table will be used to create the _rdioScanner.systems_ within `server/config.json`. Then the `rdioScannerSystems` table will be purged.
-- The `rdioScannerCalls` table will be rebuilt, which can be pretty long on some systems.
-- It is no longer possible to upload neither your TALKGROUP.CSV nor you ALIAS.CSV files to _Rdio Scanner_. Instead, you have to define them in the `server/config.json` file.
+- The `freeScannerSystems` table will be used to create the _freeScanner.systems_ within `server/config.json`. Then the `freeScannerSystems` table will be purged.
+- The `freeScannerCalls` table will be rebuilt, which can be pretty long on some systems.
+- It is no longer possible to upload neither your TALKGROUP.CSV nor you ALIAS.CSV files to _FreeScanner_. Instead, you have to define them in the `server/config.json` file.
 
 > YOU SHOULD BACKUP YOUR `SERVER/.ENV` FILE AND YOUR DATABASE PRIOR TO UPGRADING, JUST IN CASE. WE'VE TESTED THE UPGRADE PROCESS MANY TIMES, BUT WE CAN'T KNOW FOR SURE IF IT'S GOING TO WORK WELL ON YOUR SIDE.
 

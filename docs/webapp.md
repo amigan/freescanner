@@ -2,7 +2,7 @@
 
 ## Main screen
 
-The main [Rdio Scanner](https://github.com/chuot/rdio-scanner) screen as three sections, the LED area, the display area and the controls area.
+The main [FreeScanner](https://github.com/amigan/freescanner) screen as three sections, the LED area, the display area and the controls area.
 
 ![web app main screen](./images/webapp-main.png?raw=true)\
 

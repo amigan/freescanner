@@ -132,7 +132,7 @@ func (calls *Calls) CheckDuplicate(call *Call, msTimeFrame uint, db *Database) b
 	from := call.DateTime.Add(-d)
 	to := call.DateTime.Add(d)
 
-	query := fmt.Sprintf("select count(*) from `rdioScannerCalls` where (`dateTime` between '%v' and '%v') and `system` = %v and `talkgroup` = %v", from, to, call.System, call.Talkgroup)
+	query := fmt.Sprintf("select count(*) from `freeScannerCalls` where (`dateTime` between '%v' and '%v') and `system` = %v and `talkgroup` = %v", from, to, call.System, call.Talkgroup)
 	if err := db.Sql.QueryRow(query).Scan(&count); err != nil {
 		return false
 	}
@@ -158,7 +158,7 @@ func (calls *Calls) GetCall(id uint, db *Database) (*Call, error) {
 
 	call := Call{Id: id}
 
-	query := fmt.Sprintf("select `audio`, `audioName`, `audioType`, `DateTime`, `frequencies`, `frequency`, `patches`, `source`, `sources`, `system`, `talkgroup` from `rdioScannerCalls` where `id` = %v", id)
+	query := fmt.Sprintf("select `audio`, `audioName`, `audioType`, `DateTime`, `frequencies`, `frequency`, `patches`, `source`, `sources`, `system`, `talkgroup` from `freeScannerCalls` where `id` = %v", id)
 	err := db.Sql.QueryRow(query).Scan(&call.Audio, &audioName, &audioType, &dateTime, &frequencies, &frequency, &patches, &source, &sources, &call.System, &call.Talkgroup)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, fmt.Errorf("getcall: %v, %v", err, query)
@@ -212,7 +212,7 @@ func (calls *Calls) Prune(db *Database, pruneDays uint) error {
 	defer calls.mutex.Unlock()
 
 	date := time.Now().Add(-24 * time.Hour * time.Duration(pruneDays)).Format(db.DateTimeFormat)
-	_, err := db.Sql.Exec("delete from `rdioScannerCalls` where `dateTime` < ?", date)
+	_, err := db.Sql.Exec("delete from `freeScannerCalls` where `dateTime` < ?", date)
 
 	return err
 }
@@ -322,7 +322,7 @@ func (calls *Calls) Search(searchOptions *CallsSearchOptions, client *Client) (*
 		}
 	}
 
-	query = fmt.Sprintf("select `dateTime` from `rdioScannerCalls` where %v order by `dateTime` asc", where)
+	query = fmt.Sprintf("select `dateTime` from `freeScannerCalls` where %v order by `dateTime` asc", where)
 	if err = db.Sql.QueryRow(query).Scan(&dateTime); err != nil && err != sql.ErrNoRows {
 		return nil, formatError(fmt.Errorf("%v, %v", err, query))
 	}
@@ -331,7 +331,7 @@ func (calls *Calls) Search(searchOptions *CallsSearchOptions, client *Client) (*
 		searchResults.DateStart = t
 	}
 
-	query = fmt.Sprintf("select `dateTime` from `rdioScannerCalls` where %v order by `dateTime` desc", where)
+	query = fmt.Sprintf("select `dateTime` from `freeScannerCalls` where %v order by `dateTime` desc", where)
 	if err = db.Sql.QueryRow(query).Scan(&dateTime); err != nil && err != sql.ErrNoRows {
 		return nil, formatError(fmt.Errorf("%v, %v", err, query))
 	}
@@ -385,12 +385,12 @@ func (calls *Calls) Search(searchOptions *CallsSearchOptions, client *Client) (*
 		offset = v
 	}
 
-	query = fmt.Sprintf("select count(*) from `rdioScannerCalls` where %v", where)
+	query = fmt.Sprintf("select count(*) from `freeScannerCalls` where %v", where)
 	if err = db.Sql.QueryRow(query).Scan(&searchResults.Count); err != nil && err != sql.ErrNoRows {
 		return nil, formatError(fmt.Errorf("%v, %v", err, query))
 	}
 
-	query = fmt.Sprintf("select `id`, `DateTime`, `system`, `talkgroup` from `rdioScannerCalls` where %v order by `dateTime` %v limit %v offset %v", where, order, limit, offset)
+	query = fmt.Sprintf("select `id`, `DateTime`, `system`, `talkgroup` from `freeScannerCalls` where %v order by `dateTime` %v limit %v offset %v", where, order, limit, offset)
 	if rows, err = db.Sql.Query(query); err != nil && err != sql.ErrNoRows {
 		return nil, formatError(fmt.Errorf("%v, %v", err, query))
 	}
@@ -469,7 +469,7 @@ func (calls *Calls) WriteCall(call *Call, db *Database) (uint, error) {
 		}
 	}
 
-	if res, err = db.Sql.Exec("insert into `rdioScannerCalls` (`id`, `audio`, `audioName`, `audioType`, `dateTime`, `frequencies`, `frequency`, `patches`, `source`, `sources`, `system`, `talkgroup`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", call.Id, call.Audio, call.AudioName, call.AudioType, call.DateTime, frequencies, call.Frequency, patches, call.Source, sources, call.System, call.Talkgroup); err != nil {
+	if res, err = db.Sql.Exec("insert into `freeScannerCalls` (`id`, `audio`, `audioName`, `audioType`, `dateTime`, `frequencies`, `frequency`, `patches`, `source`, `sources`, `system`, `talkgroup`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", call.Id, call.Audio, call.AudioName, call.AudioType, call.DateTime, frequencies, call.Frequency, patches, call.Source, sources, call.System, call.Talkgroup); err != nil {
 		return 0, formatError(err)
 	}
 

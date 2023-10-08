@@ -1,15 +1,15 @@
 # API
 
-There is two API endpoints available you can use to upload your audio files to [Rdio Scanner](https://github.com/chuot/rdio-scanner).
+There is two API endpoints available you can use to upload your audio files to [FreeScanner](https://github.com/amigan/freescanner).
 
 ## Endpoint: /api/call-upload
 
-This API is used by the **downstream** feature to received audio files from other [Rdio Scanner](https://github.com/chuot/rdio-scanner) instances.
+This API is used by the **downstream** feature to received audio files from other [FreeScanner](https://github.com/amigan/freescanner) instances.
 
 However, this API can be used for purposes other than **downstream**, as long as the API key gives access to the systems/talkgroups on which you wish to upload the audio file.
 
 ```bash
-$ curl https://other-rdio-scanner.example.com/api/call-upload \
+$ curl https://other-freescanner.example.com/api/call-upload \
     -F "audio=@/recordings/audio.wav"             \
     -F "audioName=audio.wav"                      \
     -F "audioType=audio/x-wav"                    \

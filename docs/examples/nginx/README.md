@@ -1,3 +1,3 @@
 # NGINX
 
-Simple NGINX configuration that reverse proxy /rdio-scanner path to an internal instance.
+Simple NGINX configuration that reverse proxy /freescanner path to an internal instance.

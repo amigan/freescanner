@@ -6,9 +6,9 @@ Here's an example with RTLSDR-Airband:
 
 See the `rtl_airband.conf` file for an example.
 
-## Rdio Scanner's configuration
+## FreeScanner's configuration
 
-In you Rdio Scanner dirwatch configuration, use those parameters:
+In you FreeScanner dirwatch configuration, use those parameters:
 
 - Directory: `/tmp/radio/Laurentides`
 - Extension: `mp3`

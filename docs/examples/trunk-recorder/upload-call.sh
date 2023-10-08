@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # If your Trunk Recorder instance is running on the same host
-# as Rdio Scanner, you can use a dirwatch to ingest audio files
+# as FreeScanner, you can use a dirwatch to ingest audio files
 # instead of relying on this script.
 #
 # If on the contrary you Trunk Recorder instance runs on another
@@ -16,17 +16,17 @@
 #   ...
 # }
 #
-# Note that you have to pass the Rdio Scanner system Id as the
+# Note that you have to pass the FreeScanner system Id as the
 # first argument. Trunk Recorder will then add the full path
 # of the audio file as the second argument.
 
-# Change this API key to the one configured in your Rdio Scanner
+# Change this API key to the one configured in your FreeScanner
 # instance.
 apikey=b29eb8b9-9bcd-4e6e-bb4f-d244ada12736
 
 basename="${2%.*}"
 
-# Change the URL to match your Rdio Scanner host.
+# Change the URL to match your FreeScanner host.
 curl -sS http://127.0.0.1:3000/api/trunk-recorder-call-upload \
      -F "key=${apikey}" \
      -F "audio=@${basename}.wav;type=audio/wav" \

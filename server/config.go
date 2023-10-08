@@ -58,9 +58,9 @@ type Config struct {
 func NewConfig() *Config {
 	const (
 		defaultAdminUrl   = "/admin"
-		defaultConfigFile = "rdio-scanner.ini"
+		defaultConfigFile = "freescanner.ini"
 		defaultDbType     = DbTypeSqlite
-		defaultDbFile     = "rdio-scanner.db"
+		defaultDbFile     = "freescanner.db"
 		defaultDbHost     = "localhost"
 		defaultDbPort     = uint(3306)
 		defaultListen     = ":3000"
@@ -79,7 +79,7 @@ func NewConfig() *Config {
 			config.BaseDir = filepath.Dir(exe)
 			if !config.isBaseDirWritable() {
 				if h, err := os.UserHomeDir(); err == nil {
-					config.BaseDir = filepath.Join(h, "Rdio Scanner")
+					config.BaseDir = filepath.Join(h, "FreeScanner")
 					if _, err := os.Stat(config.BaseDir); os.IsNotExist(err) {
 						os.MkdirAll(config.BaseDir, 0770)
 					}
