@@ -56,6 +56,7 @@ type DefaultOptions struct {
 	disableDuplicateDetection   bool
 	duplicateDetectionTimeFrame uint
 	keypadBeeps                 string
+	disableBeeps                bool
 	maxClients                  uint
 	playbackGoesLive            bool
 	pruneDays                   uint

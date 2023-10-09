@@ -97,6 +97,7 @@ export interface FreeScannerConfig {
     dimmerDelay: number | false;
     email?: string;
     groups: { [key: string]: { [key: number]: number[] } };
+    disableBeeps: boolean;
     keypadBeeps: FreeScannerKeypadBeeps | false;
     playbackGoesLive: boolean;
     showListenersCount: boolean;

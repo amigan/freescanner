@@ -86,6 +86,7 @@ export class FreeScannerService implements OnDestroy {
     private config: FreeScannerConfig = {
         dimmerDelay: false,
         groups: {},
+        disableBeeps: false,
         keypadBeeps: false,
         playbackGoesLive: false,
         showListenersCount: false,
@@ -227,7 +228,7 @@ export class FreeScannerService implements OnDestroy {
 
             const seq = this.config.keypadBeeps && this.config.keypadBeeps[style];
 
-            if (!context || !seq) {
+            if (this.config.disableBeeps || !context || !seq) {
                 resolve();
 
                 return;
@@ -908,6 +909,7 @@ export class FreeScannerService implements OnDestroy {
                         dimmerDelay: typeof config.dimmerDelay === 'number' ? config.dimmerDelay : 5000,
                         email: typeof config.email === 'string' ? config.email : '',
                         groups: typeof config.groups !== null && typeof config.groups === 'object' ? config.groups : {},
+                        disableBeeps: typeof config.disableBeeps === 'boolean' ? config.disableBeeps : false,
                         keypadBeeps: config.keypadBeeps !== null && typeof config.keypadBeeps === 'object' ? config.keypadBeeps : {},
                         playbackGoesLive: typeof config.playbackGoesLive === 'boolean' ? config.playbackGoesLive : false,
                         showListenersCount: typeof config.showListenersCount === 'boolean' ? config.showListenersCount : false,

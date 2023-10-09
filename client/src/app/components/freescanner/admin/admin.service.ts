@@ -138,6 +138,7 @@ export interface Options {
     duplicateDetectionTimeFrame?: number;
     email?: string;
     keypadBeeps?: string;
+    disableBeeps?: boolean;
     maxClients?: number;
     playbackGoesLive?: boolean;
     pruneDays?: number;
@@ -504,6 +505,7 @@ export class FreeScannerAdminService implements OnDestroy {
             disableDuplicateDetection: [options?.disableDuplicateDetection],
             duplicateDetectionTimeFrame: [options?.duplicateDetectionTimeFrame, [Validators.required, Validators.min(0)]],
             email: [options?.email],
+            disableBeeps: [options?.disableBeeps],
             keypadBeeps: [options?.keypadBeeps, Validators.required],
             maxClients: [options?.maxClients, [Validators.required, Validators.min(1)]],
             playbackGoesLive: [options?.playbackGoesLive],

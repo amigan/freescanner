@@ -183,6 +183,7 @@ func (client *Client) SendConfig(groups *Groups, options *Options, systems *Syst
 		"email":              options.Email,
 		"groups":             client.GroupsMap,
 		"keypadBeeps":        GetKeypadBeeps(options),
+		"disableBeeps":       options.DisableBeeps,
 		"playbackGoesLive":   options.PlaybackGoesLive,
 		"showListenersCount": options.ShowListenersCount,
 		"systems":            client.SystemsMap,

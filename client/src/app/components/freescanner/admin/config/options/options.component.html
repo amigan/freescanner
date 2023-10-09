@@ -48,8 +48,8 @@
     <div class="row">
         <p>
             <span class="mat-body">Branding Label</span><br>
-            <span class="mat-caption">A simple line of text displayed above the main screen to help identify the Rdio
-                Scanner instance.</span>
+            <span class="mat-caption">A simple line of text displayed above the main screen to help identify the FreeScanner
+              instance.</span>
         </p>
         <mat-form-field floatLabel="never">
             <input type="text" matInput formControlName="branding" placeholder="Branding">
@@ -116,6 +116,15 @@
                 <mat-option value="whistler">Whistler</mat-option>
             </mat-select>
         </mat-form-field>
+    </div>
+    <div class="row">
+        <p>
+            <span class="mat-body">Disable Beeps</span><br>
+            <span class="mat-caption">Disable keypad beeps.</span>
+        </p>
+        <div>
+            <mat-slide-toggle color="primary" formControlName="disableBeeps"></mat-slide-toggle>
+        </div>
     </div>
     <div class="row">
         <p>

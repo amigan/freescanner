@@ -33,6 +33,7 @@ type Options struct {
 	DisableDuplicateDetection   bool   `json:"disableDuplicateDetection"`
 	DuplicateDetectionTimeFrame uint   `json:"duplicateDetectionTimeFrame"`
 	Email                       string `json:"email"`
+	DisableBeeps                bool   `json:"disableBeeps"`
 	KeypadBeeps                 string `json:"keypadBeeps"`
 	MaxClients                  uint   `json:"maxClients"`
 	PlaybackGoesLive            bool   `json:"playbackGoesLive"`
@@ -131,6 +132,13 @@ func (options *Options) FromMap(m map[string]any) *Options {
 		options.KeypadBeeps = defaults.options.keypadBeeps
 	}
 
+	switch v := m["disableBeeps"].(type) {
+	case bool:
+		options.DisableBeeps = v
+	default:
+		options.DisableBeeps = defaults.options.disableBeeps
+	}
+
 	switch v := m["maxClients"].(type) {
 	case float64:
 		options.MaxClients = uint(v)
@@ -208,6 +216,7 @@ func (options *Options) Read(db *Database) error {
 	options.DisableDuplicateDetection = defaults.options.disableDuplicateDetection
 	options.DuplicateDetectionTimeFrame = defaults.options.duplicateDetectionTimeFrame
 	options.KeypadBeeps = defaults.options.keypadBeeps
+	options.DisableBeeps = defaults.options.disableBeeps
 	options.MaxClients = defaults.options.maxClients
 	options.PlaybackGoesLive = defaults.options.playbackGoesLive
 	options.PruneDays = defaults.options.pruneDays
@@ -279,6 +288,11 @@ func (options *Options) Read(db *Database) error {
 			switch v := m["keypadBeeps"].(type) {
 			case string:
 				options.KeypadBeeps = v
+			}
+
+			switch v := m["disableBeeps"].(type) {
+			case bool:
+				options.DisableBeeps = v
 			}
 
 			switch v := m["maxClients"].(type) {
